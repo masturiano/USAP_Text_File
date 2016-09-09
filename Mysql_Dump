@@ -1,0 +1,28 @@
+Import / Export a mysql database on the command line
+
+To export a mysql database (as a dump) from the command line run:
+mysqldump database_name > database_exportname.sql
+
+To import a mysql database dump into a database:
+mysql database_name < database_exportname.sql
+
+To export all databases into a dump:
+mysqldump --all-databases > all_databases_export.sql
+
+To export databases with one table into a dump:
+mysqldump  -uroot -p feeds cp_detailed_ci > /tmp/cp_detailed_ci.sql
+
+To import one of these mysql databases from the dump into a database:
+mysql --one-database database_name < all_databases_export.sql
+
+mysql -u root feeds < cp_sku.sql
+
+
+#!/bin/bash
+/etc/init.d/mysqld stop
+scp -i /root/ec2.key 184.73.160.117:/data/mysql/feeds/master_template.* /data/mysql/feeds;
+scp -i /root/ec2.key 184.73.160.117:/data/mysql/feeds/YMMSE.* /data/mysql/feeds;
+scp -i /root/ec2.key 184.73.160.117:/data/mysql/feeds/lookup_id.* /data/mysql/feeds;
+chown mysql:mysql /data/mysql/feeds
+chown mysql:mysql /data/mysql/feeds/*
+/etc/init.d/mysqld start

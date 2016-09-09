@@ -1,0 +1,1 @@
+sudo salt-call state.sls utils.permissions

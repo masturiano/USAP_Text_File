@@ -1,0 +1,20 @@
+
++---------+----------------+
+| team_id | team           |
++---------+----------------+
+|       1 |                |
+|      22 | Administration |
+|       2 | All Others     |
+|      23 | Applications   |
+|      27 | Automotive     |
+|      17 | HG             |
+|      20 | Powersport     |
+|      24 | Pricing        |
+|      10 | Private Label  |
+|      11 | Private Label2 |
+|      14 | Private Label3 |
+|      25 | Private Label4 |
+|      26 | QA Management  |
+|      28 | WorldPac       |
++---------+----------------+
+ 

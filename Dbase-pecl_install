@@ -1,0 +1,3 @@
+pecl install dbase
+
+then add "extension=dbase.so" to php.ini

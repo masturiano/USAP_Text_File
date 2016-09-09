@@ -1,0 +1,204 @@
+Conversation with m.espi on Tue 01 Mar 2016 03:06:51 PM PHT:
+(03:06:50 PM) m.espi: /data/www/html/sites/tempo.hydra.dev.usautoparts.com/library/Services/Tools/Coupon2/v2d2
+(03:11:20 PM) DEL: thank you mam :)
+(03:12:56 PM) m.espi: oks
+(03:14:11 PM) DEL: mam bakit walang laman sa development? :(
+----------------------------------------------------
+/etc/rc.d/init.d/gearmand restart = restart gearman
+sudo supervisord
+sudo supervisorctl
+sudo couponworker restart
+
+[program:couponworker]
+command=/usr/bin/php scripts/usaptool.php -a dcms.otucoupon.run-coupon-worker -e staging -n couponworker
+;command=php /var/www/html/usaptool/scripts/test.php
+directory=/var/www/html/usaptool/
+autostart=true
+autorestart=true
+user=root
+startsecs=0
+
+
+[program:geoip]
+command=/usr/bin/php scripts/usaptool.php -a geoip.index.run-geoip-worker -e staging
+directory=/var/www/html/usaptool/
+autostart=true
+autorestart=true
+user=root
+startsecs=0
+
+supervisor> update
+
+
+/etc/supervisord.confd
+
+Net: /etc/supervisor/conf.d/myprocess.conf:
+---
+
+
+(06:25:42 PM) m.espi: /etc/rc.d/init.d/gearmand stop
+/etc/rc.d/init.d/gearmand start
+----------------------------------------------------
+touch the /tmp/supervisor.sock
+supervisord
+(06:25:49 PM) m.espi: supervisorctl
+(06:26:00 PM) m.espi: restart couponworker
+couponworker stop
+couponworker start
+
+-=( Check Worker )=-
+sudo supervisorctl
+tail -f nameOfWorker	
+
+-----------------------------------------------------
+
+
+Mod-Gearman Quickstart Guide
+Table of Contents
+Build Preparation
+Install Gearman
+Mod-Gearman
+Nagios
+Starting Up
+Nagios Configuration
+Testing
+Gearman-Top
+Check-Gearman
+Troubleshooting
+
+This quickstart guide was written for Debian Lenny (5.0) but probably works with different Linux systems too.
+Note
+	This guide installs Mod-Gearman from source. Use packages whenever possible and only do a source install when there are no packages.
+
+This guide assumes you have a basic nagios system running.
+
+All commands have to be executed as root.
+Build Preparation
+
+We need a couple of packages for building Gearman and Mod-Gearman:
+
+#> apt-get update
+#> apt-get install autoconf automake make gcc g++ wget tar file netcat uuid-dev libltdl3-dev libncurses5-dev libevent-dev
+
+We will install Gearman in /opt to make later removal easier. For example if there will be a Debian package sometimes. This keeps your base system clean from non-packaged software, but in order to make that work, we have to add /opt/lib to the ld lib path.
+
+#> echo "/opt/lib" > /etc/ld.so.conf.d/opt_lib.conf
+#> ldconfig
+
+Install Gearman
+
+We need at least Gearman version >= 0.14. Execute the following steps to install Gearman from source.
+
+#> cd /tmp
+#> wget "http://launchpad.net/gearmand/trunk/0.25/+download/gearmand-0.25.tar.gz"
+#> tar zxf gearmand-0.25.tar.gz
+#> cd gearmand-0.25
+#> ./configure --prefix=/opt
+#> make
+#> make install
+
+Mod-Gearman
+
+Half way done, the next step installs Mod-Gearman.
+
+#> cd /tmp
+#> wget "/images/2010/09/mod_gearman-1.4.2.tar.gz"
+#> tar zxf mod_gearman-1.4.2.tar.gz
+#> cd mod_gearman-1.4.2
+#> ./configure --prefix=/opt --with-gearman=/opt --with-user=nagios --with-init-dir=/etc/init.d
+#> make
+#> make install
+#> make install-config
+#> cp ./extras/gearmand-init /etc/init.d/gearmand
+
+Nagios
+
+We need a nagios installation if not already installed.
+
+#> apt-get install nagios3
+
+Gearman runs as user nagios which needs a valid shell:
+
+#> chsh nagios
+Changing the login shell for nagios
+Enter the new value, or press ENTER for the default
+        Login Shell [/bin/false]: /bin/bash
+
+Starting Up
+
+Now we can start the Gearman daemon and our Mod-Gearman worker:
+
+#> /etc/init.d/gearmand start
+Starting gearmand done
+#> /etc/init.d/gearmand status
+gearmand is running with pid 31869
+#> /etc/init.d/mod_gearman_worker start
+Starting mod_gm_worker done
+#> /etc/init.d/mod_gearman_worker status
+mod_gm_worker is running with pid 31939
+
+Nagios Configuration
+
+Open your nagios.cfg and enable eventbroker. When using the packaged nagios3 from Debian the file is located at /etc/nagios3/nagios.cfg.
+
+event_broker_options=-1
+broker_module=/opt/lib/mod_gearman/mod_gearman.o config=/opt/etc/mod_gearman.conf
+
+and finally restart nagios:
+
+#> /etc/init.d/nagios3 restart
+Restarting nagios3 monitoring daemon: nagios3
+
+Your nagios.log should contain a line:
+
+#> grep mod_gearman /var/log/nagios3/nagios.log
+[1295003042] mod_gearman: Version 1.4.2
+[1295003042] Event broker module '/opt/lib/mod_gearman/mod_gearman.o' initialized successfully.
+
+Testing
+
+We can perform a few tests to see if everything is up and running.
+Gearman-Top
+
+First we have a look at /opt/bin/gearman_top. You should have at least one worker for each queue.
+
+2011-01-07 23:23:24  -  localhost:4730   -  v0.25
+Queue Name      | Worker Available | Jobs Waiting | Jobs Running
+------------------------------------------------------------------
+check_results   |               1  |           0  |           0
+eventhandler    |               1  |           0  |           0
+host            |               1  |           0  |           0
+service         |               1  |           0  |           0
+worker_debian64 |               1  |           0  |           0
+------------------------------------------------------------------
+
+Check-Gearman
+
+Then we have a look at the shiped check plugin:
+
+#> /opt/bin/check_gearman -H localhost -q worker_`hostname` -t 10 -s check
+check_gearman OK - debian64 has 1 worker and is working on 0 jobs. Version: 1.4.2|worker=1 jobs=2c
+
+The interesting number is the last one, 2c in our case, which means there have been already 2 jobs executed by this worker.
+Troubleshooting
+
+First check if everything is up and running:
+
+ #> /etc/init.d/nagios3 status
+ checking /usr/sbin/nagios3...done (running).
+ #> /etc/init.d/gearmand status
+ gearmand is running with pid 31921
+ #> /etc/init.d/mod_gearman_worker status
+ mod_gm_worker is running with pid 31939
+
+If one of them is not running, try to start it or check the logfiles for possible error messages.
+
+    Nagios: /var/log/nagios3/nagios.log
+
+    Gearmand: /opt/var/mod_gearman/gearmand.log
+
+    Mod-Gearman Worker: /opt/var/mod_gearman/mod_gearman_worker.log
+
+Last updated 2013-01-10 10:56:44 CEST
+
+ /var/www/html/product_view_data/product_view.sh

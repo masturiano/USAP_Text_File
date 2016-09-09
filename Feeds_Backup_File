@@ -1,0 +1,116 @@
+escription: Move all backup files from the Production Server to Back-up Server. Each account has designated folder in Back-up Server
+When to run: Every after Google Upload
+
+[WHERE] EC2FEEDGEN01
+> sh /data/feeds_script/move_backup_files.sh
+
+[WHERE] EC2FEEDGEN04
+> sh /data/feeds_script/move_backup_files.sh
+
+[WHERE] EC2FEEDGEN06
+> sh /data/feeds_script/move_backup_files.sh
+
+[WHERE] EC2FEEDGEN07
+> sh /data/feeds_script/move_backup_files.sh
+
+[WHERE] EC2FEEDGEN08
+> sh /data/feeds_script/move_backup_files.sh
+
+NOTE: Before executing the command, Please inform LT, ME not to suspend GEN02
+
+Backup Server:
+
+WHERE: EC2FEEDGEN02
+Description:Delete old feed files in backup folder ONLY IF the feed files are more than 1 month old already. Only retain backup of each account for the last 30 days
+When to run: Whenever "Storage Alert on GEN02 - BACKUP SERVER" email is received
+
+> sh /data/feeds_script/back_up_cleanup.sh
+
+Backup Folder Structure
+[root@ip-10-178-38-241 feeds_script]# cd /data/feeds_longbow/feeds_backup
+[root@ip-10-178-38-241 feeds_backup]# tree
+.
+|-- apw
+|   |-- bing
+|   |-- cj
+|   |   |-- apwCJFeed-20160402-160757.zip
+|   |   `-- apwCJFeed-20160515-000736.zip
+|   |-- ecn
+|   |   |-- apw_20151126.zip
+|   |   `-- apw_20160514.zip
+|   |-- google
+|   |   |-- apw_20160314.zip
+|   |   `-- bbase_apw_0407.zip
+|   |-- lc
+|   |-- ls
+|   `-- pj
+|-- cp
+|   |-- bing
+|   |-- cj
+|   |   |-- cpCJTop100k.txt-20160329-151121.zip
+|   |   `-- cpCJTop100k_sample-20160505-151919.zip
+|   |-- ecn
+|   |   |-- Google_taxonomy_20111201_orig.csv
+|   |   `-- cpecn.zip-20160515-032318
+|   `-- google
+|       |-- carparts_ci_-20160308-134439.zip
+|       `-- cp_adwords_labels-2015-10-18.csv
+|-- dam
+|   |-- bing
+|   `-- google
+|       |-- mirrorsale1-20160509-190747.zip
+|       `-- mirrorsale3-20160516-070448.zip
+|-- dbp
+|   |-- bing
+|   `-- google
+|       |-- dbp_feeds-20160408-054514.zip
+|       `-- dbp_feeds11-20160516-071159.zip
+|-- dcc
+|   `-- google
+|       |-- dcc_feed2-20160421-183216.zip
+|       `-- dcc_feed2-20160517-110114.zip
+|-- jcw
+|   |-- bing
+|   |-- cj
+|   |   |-- jcwdatafeed.txt-20160322-181411.gz
+|   |   `-- jcwdatafeed.txt-20160517-104713.gz
+|   |-- criteo
+|   |   |-- jcw_criteo-20160224-132446.zip
+|   |   `-- jcw_pepperjam.txt-20160517-105410.gz
+|   |-- ecn
+|   |-- google
+|   |   |-- 03_05_2016_02_01_44_AM
+|   |   |   |-- compressed_jcw_feed.zip
+|   |   |   |-- jcw_froogle1.zip
+|   |   |   |-- jcw_froogle2.zip
+|   |   |   |-- jcw_froogle3.zip
+|   |   |   `-- jcw_froogle5.zip
+|   |   `-- jcw_froogle4.txt
+|   |-- lc
+|   |   |-- 22650-2016-02-02-10-47.csv-20160207-210843.gz
+|   `-- pepperjam
+|-- pt
+|   |-- bing
+|   |   |-- ptBing-20160419-042557.zip
+|   |   `-- ptBing-20160514-211157.zip
+|   |-- cj
+|   |   |-- ptCJFeed-20160329-151531.zip
+|   |   `-- ptCJFeed-20160515-002058.zip
+|   `-- google
+|       |-- carfeedspt_-20160311-114651.zip
+|       `-- ptfeeds_2-20160517-100300.zip
+`-- stt
+    |-- cj
+    |-- google
+    |   |-- stdatafeed.txt-20160106-102122.gz
+    |   `-- stylin_13-08-08-01-38-29.zip
+    `-- pj
+        |-- st_pepperjam.txt-20160106-102324.gz
+           `-- stylin_130808010541.zip
+
+53 directories, 567 files
+
+NOTE: Make sure to add every new feeds account to the script:
+
+1. Create a directory in GEN02 (/data/feeds_longbow/feeds_backup)
+2. Modify move_backup_files.sh

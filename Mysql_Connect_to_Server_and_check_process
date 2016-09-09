@@ -1,0 +1,8 @@
+ssh username
+
+ps aux | grep php
+
+mysql -u root -p 
+input password
+
+show processlist;

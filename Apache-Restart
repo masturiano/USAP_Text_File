@@ -1,0 +1,25 @@
+sudo service httpd start
+On server: sudo /etc/init.d/httpd restart
+/etc/init.d/mysqld status = start mysql
+
+sudo pecl install mongo
+mongo php -m | grep -i mongo
+
+/etc/hosts/
+127.0.0.1	ZendSkeletonApplication.localhost localhost
+
+/etc/httpd/conf/httpd.conf
+<VirtualHost *:80>
+     ServerName ZendSkeletonApplication.localhost
+     DocumentRoot /var/www/html/ZendSkeletonApplication/public
+     SetEnv APPLICATION_ENV "development"
+     <Directory /var/www/html/ZendSkeletonApplication/public>
+         DirectoryIndex index.php
+         AllowOverride All
+         Order allow,deny
+         Allow from all
+     </Directory>
+ </VirtualHost>
+
+/data/aopi/feeds_longbow/carparts/froogle_sku_ci/production/scripts/data
+dw

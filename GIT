@@ -1,0 +1,11 @@
+Next, each developer creates a local copy of the entire project. This is accomplished via the git clone command:
+Command: git clone ssh://user@host/path/to/repo.git
+
+Tagging
+Command: $ git tag -a v1.0.0 -m "Version 1 release"
+
+http://alblue.bandlem.com/2011/04/git-tip-of-week-tags.html
+
+http://rogerdudler.github.io/git-guide/
+
+git diff --name-status master..f_title

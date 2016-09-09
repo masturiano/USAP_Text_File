@@ -1,0 +1,11 @@
+select COLUMN_NAME    as 'Field',
+       COLUMN_TYPE    as 'Type',
+       IS_NULLABLE    as 'Null',
+       COLUMN_KEY     as 'Key',
+       COLUMN_DEFAULT as 'Default',
+       EXTRA          as 'Extra'
+    from INFORMATION_SCHEMA.COLUMNS
+        where TABLE_NAME   = 'master_template_test' and
+              TABLE_SCHEMA = 'feeds'
+    -- add ordering --
+    order by Field;
