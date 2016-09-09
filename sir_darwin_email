@@ -1,0 +1,31 @@
+From: Darwin Valencia
+Sent: Thursday, July 07, 2016 12:25 PM
+To: DG Team ECOM Developers; DG Team Market Engineering Core; DG Team Sales Console Core; DG Team Client Side Developers
+Cc: Faustino Olpindo Jr.
+Subject: [TRAC] - Important fields to populate for tracking team metrics
+
+Team,
+
+As discussed in our meeting yesterday, we need to make sure to populate and fill properly the following trac ticket custom fields for metric generation.
+
+1. Add DEV Hours (text) = the number of hours you spent on that ticket. This is in tandem with "DEV Activity" field.
+
+2. DEV Task Activity (select) = indicates what type of activity you did on the ticket. This is a tandem of "Add DEV Hours". 
+
+Note: "Add DEV Hours" and "DEV Task" are tandem fields. Meaning you need to set both fields properly before submitting the ticket change. 
+
+3. Plan Type (select) = this is specifically use by our CTO in his report in determining the ratio between Planned and Unplanned activities of the group.
+
+4. Development Method (select) = indicates which team and using what development method (scrum, kanban, waterfall, xp, etc) the ticket was developed or performed.
+
+So the statement yesterday is that, you need to make sure that whatever activity you are doing, there is an equivalent ticket for you to account the hours. No hours means no work perform and you may be ask to explain the missing hours.
+
+At average a developer is allocated 5 hour per day on projects. The 2 hours is for Technical activities (doing technical tickets in the Technical Backlog) or other non-project or task specific activities.
+
+Let me know if you have questions.
+
+Thanks and looking forward to your compliance.
+
+--
+Darwin M. Valencia
+--
