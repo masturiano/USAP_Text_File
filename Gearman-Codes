@@ -202,3 +202,57 @@ If one of them is not running, try to start it or check the logfiles for possibl
 Last updated 2013-01-10 10:56:44 CEST
 
  /var/www/html/product_view_data/product_view.sh
+
+------------------------------------------------------------------
+------------------------------------------------------------------
+------------------------------------------------------------------
+------------------------------------------------------------------
+------------------------------------------------------------------
+------------------------------------------------------------------
+
+ Error: PHP Fatal error:  Class 'GearmanClient' not found
+
+Este error de apache requiere esta instalacion:
+pecl install gearman
+
+Y esta anterior probablemente va a marcar:
+ configure: error: Please install libgearman
+
+Esto seguira saliendo como error aunque ya tengas instalado libgearman! La solucion es instalar el paquete de development como adicional:
+
+yum install libgearman-devel
+
+Ya con eso sigue:
+pecl install gearman
+
+Y listo. Dependiendo de tu sistema puede que necesites agregar lo siguiente en /etc/php.ini:
+extension=gearman.so
+
+Reinicia apache (service httpd restart) y listo.
+Publicadas por lat a la/s 14:34 
+
+-----------
+
+sudo mkdir /var/log/gearman-job-server/
+sudo touch /var/log/gearman-job-server/gearmand.log
+sudo killall gearmand
+sudo gearmand --log-file=/var/log/gearman-job-server/gearmand.log
+
+--------------
+#check gearman support
+php --info|grep gearman
+
+
+-------------------------------
+
+supervisor> reread
+To update config
+No config updates to processes
+
+
+supervisorctl start all
+supervisorctl stop all
+
+service supervisord stop
+service supervisord status
+service supervisord restart
