@@ -29,3 +29,36 @@ stdout_logfile=/path/to/project/log/myprocess.log
 stdout_logfile_maxbytes=1MB
 stderr_logfile=/path/to/project/log/myprocess.log
 stderr_logfile_maxbytes=1MB
+
+Used:
+[program:worker_concat]
+process_name=%(process_num)s
+directory=/var/www/html/gearman/
+command=php worker_concat.php
+numprocs=5
+autostart=true
+autorestart=true
+user=masturiano
+startsecs=0
+stopsignal=KILL
+stopwaitsecs=10
+stdout_logfile=/var/www/html/gearman/logs/supervisor.log
+stdout_logfile_maxbytes=1MB
+stderr_logfile=/var/www/html/gearman/logs/supervisor.log
+stderr_logfile_maxbytes=1MB
+
+[program:string_concat]
+process_name=%(process_num)s
+directory=/var/www/html/gearman/
+command=php worker_concat.php
+numprocs=5
+autostart=true
+autorestart=true
+user=masturiano
+startsecs=0
+stopsignal=KILL
+stopwaitsecs=10
+stdout_logfile=/var/www/html/gearman/logs/supervisor.log
+stdout_logfile_maxbytes=1MB
+stderr_logfile=/var/www/html/gearman/logs/supervisor.log
+stderr_logfile_maxbytes=1MB
