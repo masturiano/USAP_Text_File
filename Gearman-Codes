@@ -256,3 +256,27 @@ supervisorctl stop all
 service supervisord stop
 service supervisord status
 service supervisord restart
+
+
+
+=========================
+===== Coupon worker =====
+=========================
+
+[program:geoip]
+command=php scripts/usaptool.php -a geoip.index.run-geoip-worker -e development
+directory=/var/www/html/me.usaptool.dev.usautoparts.com/
+autostart=false
+autorestart=false
+user=root
+startsecs=0
+
+
+[program:couponworker]
+command=php scripts/usaptool.php -a dcms.otucoupon.run-coupon-worker -e development -n couponworker
+;directory=/data/www/html/usaptool/
+directory=/var/www/html/me.usaptool.dev.usautoparts.com/
+autostart=true
+autorestart=true
+user=root
+startsecs=0

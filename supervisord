@@ -16,6 +16,10 @@ service supervisord stop
 service supervisord status
 service supervisord restart
 
+$ supervisorctl reread
+$ supervisorctl update
+$ supervisorctl restart myapp:*
+
 ==============================
 ===== Worker =====
 ==============================
